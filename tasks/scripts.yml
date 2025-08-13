@@ -1,0 +1,16 @@
+---
+- name: Create /opt/scripts directory
+  ansible.builtin.file:
+    path: /opt/scripts
+    state: directory
+    owner: root
+
+- name: Copy ansible scripts to /opt/scripts
+  ansible.builtin.copy:
+    src: "opt/scripts/{{ item }}"
+    dest: "/opt/scripts/{{ item }}"
+    force: true
+    mode: preserve
+  with_items:
+    - "install-ansible.sh"
+    - "ansible-pull.sh"

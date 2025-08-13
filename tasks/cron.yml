@@ -1,0 +1,7 @@
+---
+- name: Cron to ansible-pull
+  ansible.builtin.cron:
+    name: ansible-pull
+    special_time: hourly
+    user: root
+    job: "/opt/scripts/ansible-pull.sh"

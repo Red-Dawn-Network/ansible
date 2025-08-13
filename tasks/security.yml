@@ -1,0 +1,15 @@
+---
+- name: Allow management ports
+  community.general.ufw:
+    rule: allow
+    port: "{{ item }}"
+    proto: tcp
+  with_items:
+    - 22 # SSH
+    - 3389 # RDP
+
+- name: Rate limit SSH (reduces brute force efficacy)
+  community.general.ufw:
+    rule: limit
+    port: ssh
+    proto: tcp

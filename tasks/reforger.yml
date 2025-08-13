@@ -1,0 +1,67 @@
+---
+- name: Create /opt/scripts/reforger directory
+  ansible.builtin.file:
+    path: /opt/scripts
+    state: directory
+    owner: root
+
+- name: Copy reforger scripts to /opt/scripts/reforger
+  ansible.builtin.copy:
+    src: opt/scripts/reforger/
+    dest: /opt/scripts/reforger
+    force: true
+    mode: preserve
+
+- name: Allow reforger UDP ports
+  community.general.ufw:
+    rule: allow
+    port: "{{ item }}"
+    proto: udp
+  with_items:
+    - 2001
+    - 17777
+    - 19999
+    - 42431
+
+- name: Clone discord.sh
+  ansible.builtin.git:
+    repo: https://github.com/fieu/discord.sh
+    dest: /opt/discord-sh
+    force: false
+
+- name: Check if LinuxGSM Arma Reforger has been installed
+  ansible.builtin.stat:
+    path: "{{ linuxgsm_home }}/armarserver"
+  register: linuxgsm_result
+
+- name: Configure Arma Reforger service
+  when: linuxgsm_result.stat.exists
+  block:
+    - name: "Create armaserver.service with user {{ user }} against installation at {{ linuxgsm_home }}"
+      ansible.builtin.template:
+        src: etc/systemd/system/armaserver.service.j2
+        dest: /etc/systemd/system/armaserver.service
+      vars:
+        user: "{{ user }}"
+        linuxgsm_home: "{{ linuxgsm_home }}"
+      register: armaserver_service
+
+    - name: Reload systemd on change
+      ansible.builtin.systemd_service:
+        daemon_reload: true
+      when: armaserver_service.changed
+
+    - name: Check if running in test container
+      ansible.builtin.stat:
+        path: /etc/skel/armarserver
+      register: container_result
+
+    - name: Enable armaserver.service
+      ansible.builtin.systemd_service:
+        name: armaserver.service
+        state: started
+        enabled: true
+      register: systemd_service_result
+      failed_when:
+        - systemd_service_result is failed
+        - not container_result.stat.exists

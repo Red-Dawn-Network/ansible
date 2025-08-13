@@ -1,0 +1,28 @@
+---
+# Install dependencies
+- ansible.builtin.include_tasks: deps.yml
+
+# Create users, omit `github` parameter if user does not have a GitHub account
+- ansible.builtin.include_tasks: user.yml
+  loop:
+    - { name: 'scott', admin: true, docker: true, github: 'ScottX01' }
+    - { name: 'heywoodlh', admin: true, docker: true, github: 'heywoodlh' }
+
+# Setup cron jobs
+- ansible.builtin.include_tasks: cron.yml
+
+# Configure scripts
+- ansible.builtin.include_tasks: scripts.yml
+
+# Configure basic security posture
+- ansible.builtin.include_tasks: security.yml
+
+# Host-specific tasks
+- ansible.builtin.include_tasks: "{{ item }}"
+  with_items:
+    - "hosts/reddawnmilsim.yml"
+    - "./reforger.yml"
+  when: ansible_hostname == "reddawnmilsim"
+  vars:
+    user: scott
+    linuxgsm_home: "/home/scott"

@@ -1,0 +1,28 @@
+---
+- name: "Create user {{ item.name }}"
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+
+- name: "Allow user {{ item.name }} to sudo without password"
+  ansible.builtin.lineinfile:
+    path: "/etc/sudoers.d/{{ item.name }}"
+    line: "{{ item.name }} ALL=(ALL) NOPASSWD: ALL"
+    create: true
+  when:
+    - item.admin is defined
+    - item.admin == true
+
+- name: "Add user {{ item.name }} to docker group"
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    groups: docker
+    append: yes
+  when:
+    - item.docker is defined
+    - item.docker == true
+
+- name: Add user GitHub keys to authorized_keys
+  ansible.posix.authorized_key:
+    key: "https://github.com/{{ item.github }}.keys"
+    user: "{{ item.name }}"
+  when: item.github is defined
