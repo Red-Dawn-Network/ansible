@@ -5,6 +5,7 @@
 # Create users, omit `github` parameter if user does not have a GitHub account
 - ansible.builtin.include_tasks: user.yml
   loop:
+    - { name: 'githubactions', admin: true, docker: true, github: 'heywoodlh' }
     - { name: 'scott', admin: true, docker: true, github: 'ScottX01' }
     - { name: 'heywoodlh', admin: true, docker: true, github: 'heywoodlh' }
 
@@ -14,10 +15,20 @@
 # Configure scripts
 - ansible.builtin.include_tasks: scripts.yml
 
+# Setup xrdp for list of users
+- ansible.builtin.include_tasks: xrdp.yml
+  loop:
+    - scott
+    - heywoodlh
+
 # Configure basic security posture
 - ansible.builtin.include_tasks: security.yml
 
+# Install Nix
+- ansible.builtin.include_tasks: nix.yml
+
 # Host-specific tasks
+# reddawnmilsim server tasks
 - ansible.builtin.include_tasks: "{{ item }}"
   with_items:
     - "hosts/reddawnmilsim.yml"
@@ -25,4 +36,13 @@
   when: ansible_hostname == "reddawnmilsim"
   vars:
     user: scott
+    linuxgsm_home: "/home/scott"
+
+# reddawnpvp server tasks
+- ansible.builtin.include_tasks: "{{ item }}"
+  with_items:
+    - "./reforger.yml"
+  when: ansible_hostname == "reddawnpvp"
+  vars:
+    linugsm_user: scott
     linuxgsm_home: "/home/scott"

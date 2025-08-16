@@ -1,12 +1,15 @@
 ---
-- name: Allow management ports
+- name: Allow SSH
   community.general.ufw:
     rule: allow
-    port: "{{ item }}"
+    port: 22
     proto: tcp
-  with_items:
-    - 22 # SSH
-    - 3389 # RDP
+
+- name: Allow port range 60000-61000 for mosh
+  community.general.ufw:
+    rule: allow
+    port: 60000:61000
+    proto: udp
 
 - name: Rate limit SSH (reduces brute force efficacy)
   community.general.ufw:
