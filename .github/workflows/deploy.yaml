@@ -23,7 +23,7 @@ jobs:
         uses: appleboy/ssh-action@v1
         with:
           username: githubactions
-          key: ${{ secrets.KEY }}
-          host: "reforger.heywoodlh.io" # Add more comma separated hosts
+          key: ${{ secrets.SSH_KEY }}
+          host: "reforger.heywoodlh.io,reforger-2.heywoodlh.io" # Add more comma separated hosts
           script: |
             sudo /opt/scripts/ansible-pull.sh
