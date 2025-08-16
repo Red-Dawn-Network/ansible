@@ -9,6 +9,11 @@
     dest: /etc/OliveTin/config.yaml
     force: false
 
+- name: Add /etc/OliveTin/.stfolder
+  ansible.builtin.file:
+    path: /etc/OliveTin/.stfolder
+    state: directory
+
 - name: Add OliveTin stignore
   ansible.builtin.blockinfile:
     path: /etc/OliveTin/.stignore
