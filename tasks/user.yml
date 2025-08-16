@@ -2,6 +2,7 @@
 - name: "Create user {{ item.name }}"
   ansible.builtin.user:
     name: "{{ item.name }}"
+    shell: /bin/bash
 
 - name: "Allow user {{ item.name }} to sudo without password"
   ansible.builtin.lineinfile:
