@@ -1,0 +1,34 @@
+---
+- name: Install xrdp and dependencies
+  ansible.builtin.apt:
+    pkg:
+      - xrdp
+      - xfce4
+      - xfce4-goodies
+      - firefox
+
+- name: "Configure XRDP for {{ item }}"
+  ansible.builtin.lineinfile:
+    path: "/home/{{ item }}/.xsession"
+    insertbefore: BOF
+    line: "xfce4-session"
+    create: true
+
+- name: Configure XRDP for future users
+  ansible.builtin.lineinfile:
+    path: /etc/skel/.xsession
+    insertbefore: BOF
+    line: "xfce4-session"
+    create: true
+
+- name: Enable xrdp
+  ansible.builtin.systemd_service:
+    name: xrdp.service
+    state: started
+    enabled: true
+
+- name: Allow RDP through firewall
+  community.general.ufw:
+    rule: allow
+    port: 3389
+    proto: tcp

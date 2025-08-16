@@ -1,0 +1,29 @@
+name: Deploy Ansible playbooks
+on:
+  - push
+  - workflow_call
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Docker
+        uses: docker/setup-docker-action@v4
+
+      - name: Run tests
+        run: |
+          script -e -c "./test.sh"
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run ansible-pull on servers
+        uses: appleboy/ssh-action@v1
+        with:
+          username: githubactions
+          key: ${{ secrets.KEY }}
+          host: "reforger.heywoodlh.io" # Add more comma separated hosts
+          script: |
+            sudo /opt/scripts/ansible-pull.sh

@@ -1,0 +1,34 @@
+---
+- name: Install Nix
+  ansible.builtin.shell: "curl -fsSL https://install.determinate.systems/nix | sh -s -- install --determinate --no-confirm"
+
+- name: Configure flakes for heywoodlh
+  block:
+    - ansible.builtin.shell: "/nix/var/nix/profiles/default/bin/nix profile add {{ item }} --override-input nixpkgs github:nixos/nixpkgs/nixpkgs-unstable || true"
+      become: true
+      become_user: heywoodlh
+      loop:
+        - "github:heywoodlh/flakes?dir=fish#tmux"
+        - "github:heywoodlh/flakes#vim"
+        - "github:heywoodlh/flakes#git"
+
+    - name: Check if tmux flake has been installed
+      ansible.builtin.stat:
+        path: /home/heywoodlh/.nix-profile/bin/tmux
+      register: tmux_result
+
+    - name: Remove old tmux invocation
+      ansible.builtin.lineinfile:
+        path: /home/heywoodlh/.bashrc
+        line: '[ -z "${TMUX}" ] && { "${HOME}"/.nix-profile/bin/tmux new-session -A -s main && exit;}'
+        state: absent
+
+    - name: Configure heywoodlh to use tmux on login
+      ansible.builtin.blockinfile:
+        path: /home/heywoodlh/.bashrc
+        block: |
+          if [[ -e ${HOME}/.nix-profile/bin/tmux ]]
+          then
+              [ -z "${TMUX}" ] && { "${HOME}"/.nix-profile/bin/tmux new-session -A -s main && exit;}
+          fi
+      when: tmux_result.stat.exists

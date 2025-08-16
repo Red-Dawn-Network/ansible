@@ -7,6 +7,7 @@
       - ufw
       - ca-certificates
       - curl
+      - mosh
 
 - name: Add Docker GPG apt Key
   ansible.builtin.apt_key:

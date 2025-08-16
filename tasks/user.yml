@@ -26,3 +26,9 @@
     key: "https://github.com/{{ item.github }}.keys"
     user: "{{ item.name }}"
   when: item.github is defined
+
+- name: Add githubactions key to githubactions user
+  ansible.posix.authorized_key:
+    key: "{{ lookup('file', 'public_keys/githubactions') }}"
+    user: githubactions
+  when: item.name == "githubactions"

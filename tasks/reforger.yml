@@ -1,4 +1,38 @@
 ---
+- name: Install OliveTin
+  ansible.builtin.apt:
+    deb: https://github.com/OliveTin/OliveTin/releases/latest/download/OliveTin_linux_amd64.deb
+
+- name: Configure OliveTin if no configuration is present
+  ansible.builtin.copy:
+    src: etc/OliveTin/config.yaml
+    dest: /etc/OliveTin/config.yaml
+    force: false
+
+- name: Add OliveTin stignore
+  ansible.builtin.blockinfile:
+    path: /etc/OliveTin/.stignore
+    create: true
+    block: |
+      !config.yaml
+      **
+
+- name: Enable and start OliveTin
+  ansible.builtin.systemd_service:
+    name: OliveTin.service
+    state: started
+    enabled: true
+
+- name: Install Syncthing for syncing files between servers
+  ansible.builtin.apt:
+    name: syncthing
+
+- name: Enable and start Syncthing
+  ansible.builtin.systemd_service:
+    name: syncthing@root.service
+    state: started
+    enabled: true
+
 - name: Create /opt/scripts/reforger directory
   ansible.builtin.file:
     path: /opt/scripts
@@ -37,12 +71,12 @@
 - name: Configure Arma Reforger service
   when: linuxgsm_result.stat.exists
   block:
-    - name: "Create armaserver.service with user {{ user }} against installation at {{ linuxgsm_home }}"
+    - name: "Create armaserver.service with user {{ linuxgsm_user }} against installation at {{ linuxgsm_home }}"
       ansible.builtin.template:
         src: etc/systemd/system/armaserver.service.j2
         dest: /etc/systemd/system/armaserver.service
       vars:
-        user: "{{ user }}"
+        user: "{{ linuxgsm_user }}"
         linuxgsm_home: "{{ linuxgsm_home }}"
       register: armaserver_service
 

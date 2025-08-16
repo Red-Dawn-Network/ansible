@@ -26,6 +26,17 @@ Run against the GitHub repository like so:
 sudo ansible-pull -U https://github.com/Red-Dawn-Network/ansible main.yml
 ```
 
+## Syncthing configuration
+
+We use Syncthing to sync sensitive configuration between hosts, such as the OliveTin config file (which contains passwords).
+
+Login to the all servers via RDP and access Syncthing at this URL in Firefox on the instance: <http://localhost:8384>
+
+Add each server using Syncthing's "Add device" dialog.
+
+On Reforger servers add the following folder:
+- `/etc/OliveTin`
+
 ## Host-specific documentation
 
 ### reddawnmilsim
