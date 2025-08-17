@@ -2,12 +2,13 @@
 - name: Install dependencies
   ansible.builtin.apt:
     pkg:
-      - cron
-      - git
-      - ufw
       - ca-certificates
+      - cron
       - curl
+      - git
+      - jq
       - mosh
+      - ufw
 
 - name: Add Docker GPG apt Key
   ansible.builtin.apt_key:

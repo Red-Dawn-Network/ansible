@@ -47,7 +47,18 @@ In order to the reforger scripts to work as expected, create `/opt/scripts/refor
 
 ```
 webhook="https://discord.com/api/webhooks/xxxxxxxxxxxxxxxxxxx/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-server_ip="64.71.161.196"
+server_port="17777"
+linuxgsm_home="/home/scott"
+```
+
+### reddawnpvp
+
+Arma Reforger Server was installed as user `scott` following these instructions: [Deploy Arma Reforger Game Servers: Install](https://linuxgsm.com/servers/armarserver)
+
+In order to the reforger scripts to work as expected, create `/opt/scripts/reforger/.env` with the following contents:
+
+```
+webhook="https://discord.com/api/webhooks/xxxxxxxxxxxxxxxxxxx/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 server_port="17777"
 linuxgsm_home="/home/scott"
 ```
