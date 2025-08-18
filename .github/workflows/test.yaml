@@ -6,6 +6,7 @@ on:
       - '!main'
     paths:
       - '**.yml'
+  workflow_dispatch:
 
 env:
   SKIP_ANSIBLE_LINT: true
