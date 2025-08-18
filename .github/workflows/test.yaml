@@ -4,6 +4,8 @@ on:
     branches:
       - '*'
       - '!main'
+    paths:
+      - '**.yml'
 
 env:
   SKIP_ANSIBLE_LINT: true
