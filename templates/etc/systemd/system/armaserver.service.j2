@@ -5,7 +5,7 @@ Wants=network-online.target
 
 [Service]
 Type=forking
-User={{ user }}
+User={{ linuxgsm_user }}
 WorkingDirectory={{ linuxgsm_home }}
 #Assume that the service is running after main process exits with code 0
 RemainAfterExit=yes

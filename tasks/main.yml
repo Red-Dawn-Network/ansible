@@ -35,7 +35,7 @@
     - "./reforger.yml"
   when: ansible_hostname == "reddawnmilsim"
   vars:
-    user: scott
+    linuxgsm_user: scott
     linuxgsm_home: "/home/scott"
 
 # reddawnpvp server tasks
@@ -44,5 +44,5 @@
     - "./reforger.yml"
   when: ansible_hostname == "reddawnpvp"
   vars:
-    linugsm_user: scott
+    linuxgsm_user: scott
     linuxgsm_home: "/home/scott"

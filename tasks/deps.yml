@@ -9,6 +9,7 @@
       - jq
       - mosh
       - ufw
+      - ansible-lint
 
 - name: Add Docker GPG apt Key
   ansible.builtin.apt_key:
@@ -28,7 +29,6 @@
       - containerd.io
       - docker-buildx-plugin
       - docker-compose-plugin
-    state: latest
     update_cache: true
 
 - name: Enable and start Docker

@@ -1,26 +1,24 @@
 ---
 - name: Install OliveTin
   ansible.builtin.apt:
-    deb: https://github.com/OliveTin/OliveTin/releases/latest/download/OliveTin_linux_amd64.deb
+    deb: "https://github.com/OliveTin/OliveTin/releases/latest/download/OliveTin_linux_amd64.deb"
 
 - name: Configure OliveTin if no configuration is present
   ansible.builtin.copy:
     src: etc/OliveTin/config.yaml
     dest: /etc/OliveTin/config.yaml
     force: false
+    mode: "0644"
 
 - name: Add /etc/OliveTin/.stfolder
   ansible.builtin.file:
     path: /etc/OliveTin/.stfolder
-    state: directory
+    state: absent
 
-- name: Add OliveTin stignore
-  ansible.builtin.blockinfile:
+- name: Remove OliveTin stignore
+  ansible.builtin.file:
     path: /etc/OliveTin/.stignore
-    create: true
-    block: |
-      !config.yaml
-      **
+    state: absent
 
 - name: Enable and start OliveTin
   ansible.builtin.systemd_service:
@@ -28,21 +26,17 @@
     state: started
     enabled: true
 
-- name: Install Syncthing for syncing files between servers
+- name: Remove Syncthing
   ansible.builtin.apt:
     name: syncthing
-
-- name: Enable and start Syncthing
-  ansible.builtin.systemd_service:
-    name: syncthing@root.service
-    state: started
-    enabled: true
+    state: absent
 
 - name: Create /opt/scripts/reforger directory
   ansible.builtin.file:
     path: /opt/scripts
     state: directory
     owner: root
+    mode: "0755"
 
 - name: Copy reforger scripts to /opt/scripts/reforger
   ansible.builtin.copy:
@@ -66,6 +60,7 @@
   ansible.builtin.git:
     repo: https://github.com/fieu/discord.sh
     dest: /opt/discord-sh
+    version: 058da74
     force: false
 
 - name: Check if LinuxGSM Arma Reforger has been installed
@@ -76,13 +71,12 @@
 - name: Configure Arma Reforger service
   when: linuxgsm_result.stat.exists
   block:
-    - name: "Create armaserver.service with user {{ linuxgsm_user }} against installation at {{ linuxgsm_home }}"
+    - name: Create armaserver.service
       ansible.builtin.template:
         src: etc/systemd/system/armaserver.service.j2
         dest: /etc/systemd/system/armaserver.service
-      vars:
-        user: "{{ linuxgsm_user }}"
-        linuxgsm_home: "{{ linuxgsm_home }}"
+        mode: "0755"
+        owner: root
       register: armaserver_service
 
     - name: Reload systemd on change

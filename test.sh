@@ -1,18 +1,44 @@
 #!/usr/bin/env bash
 
-docker build -t reddawntest .
+# Mainly for GitHub Actions
+if [[ -z $SKIP_ANSIBLE_LINT ]]
+then
+    if ! command -v ansible-lint &>/dev/null
+    then
+        sudo apt install -y ansible-lint
+        if ! command -v ansible-lint &>/dev/null
+        then
+            echo "Unable to install ansible-lint. Please install ansible-lint (sudo apt install -y ansible-lint). Exiting."
+            exit 1
+        fi
+    fi
+    ansible-lint main.yml tasks/* || exit 20
+fi
+
+echo "Building test container..."
+build_log="$(pwd)/.build.log"
+rm -f "${build_log}"
+if docker build -t reddawntest . &> "${build_log}"
+then
+    echo "Successfully built test container"
+else
+    echo "Failed to build test container! Exiting!"
+    echo "Check logs at ${build_log}."
+    exit 10
+fi
 
 # Test playbooks
-for host in "reddawnmillsim" "reddawnpvp"
+for host in "reddawnmilsim" "reddawnpvp"
 do
-    echo "" > .${host}-ansible.log
-    if docker run -it -v "$(pwd):/ansible" -v "$(pwd)/.${host}-ansible.log:/ansible.log" --privileged --hostname "${host}" --rm reddawntest
+    log_file="$(pwd)/.${host}-ansible.log"
+    echo "" > "${log_file}"
+    echo "Testing ${host} ansible playbooks in Docker..."
+    echo "To view output run the following command in another terminal: tail -f ${log_file}"
+    if docker run -it -v "$(pwd):/ansible" -v "${log_file}:/ansible.log" --privileged --hostname "${host}" --rm reddawntest &>/dev/null
     then
         echo "Ansible playbooks succeeded for ${host}!"
-        exit 0
     else
         echo "Ansible playbook execution failed for ${host}!"
-        echo "Check logs at $(pwd)/${host}-ansible.log"
-        exit 10
+        echo "Check logs at $(pwd)/.${host}-ansible.log"
     fi
 done

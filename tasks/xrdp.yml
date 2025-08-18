@@ -13,6 +13,8 @@
     insertbefore: BOF
     line: "xfce4-session"
     create: true
+    mode: "0644"
+    owner: "{{ item }}"
 
 - name: Configure XRDP for future users
   ansible.builtin.lineinfile:
@@ -20,6 +22,7 @@
     insertbefore: BOF
     line: "xfce4-session"
     create: true
+    mode: "0644"
 
 - name: Enable xrdp
   ansible.builtin.systemd_service:

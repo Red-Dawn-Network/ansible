@@ -65,4 +65,20 @@ linuxgsm_home="/home/scott"
 
 ## Development
 
+Create a new branch, make changes and push:
+
+```
+# create branch
+git checkout -b some-branch-name
+
+# make changes
+
+# test changes
+./test.sh
+
+# commit and push
+git commit -m 'some cool changes I made'
+git push origin some-branch-name
+```
+
 After making changes to playbooks -- before pushing to GitHub -- run `test.sh` in the root of the repository and ensure you didn't break anything.
