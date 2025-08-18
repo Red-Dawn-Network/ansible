@@ -11,7 +11,8 @@ RUN apt update \
     && apt install -y sudo \
     && /install-ansible.sh \
     && ansible-galaxy install -r /requirements.yml \
-    && rm -f /install-ansible.sh /requirements.yml
+    && rm -f /install-ansible.sh /requirements.yml \
+    && printf "[defaults]\nlog_path: /ansible.log\n" > /etc/ansible/ansible.cfg
 
 # Pretend that arma reforger server has been installed
 RUN touch /etc/skel/armarserver && chmod +x /etc/skel/armarserver

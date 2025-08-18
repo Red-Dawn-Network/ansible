@@ -4,6 +4,7 @@
     path: /opt/scripts
     state: directory
     owner: root
+    mode: "0755"
 
 - name: Copy ansible scripts to /opt/scripts
   ansible.builtin.copy:

@@ -4,23 +4,24 @@
     name: "{{ item.name }}"
     shell: /bin/bash
 
-- name: "Allow user {{ item.name }} to sudo without password"
+- name: "Allow user to sudo without password: {{ item.name }}"
   ansible.builtin.lineinfile:
     path: "/etc/sudoers.d/{{ item.name }}"
     line: "{{ item.name }} ALL=(ALL) NOPASSWD: ALL"
     create: true
+    mode: "0600"
   when:
     - item.admin is defined
-    - item.admin == true
+    - item.admin == "true"
 
-- name: "Add user {{ item.name }} to docker group"
+- name: "Add user to docker group: {{ item.name }}"
   ansible.builtin.user:
     name: "{{ item.name }}"
     groups: docker
-    append: yes
+    append: true
   when:
     - item.docker is defined
-    - item.docker == true
+    - item.docker == "true"
 
 - name: Add user GitHub keys to authorized_keys
   ansible.posix.authorized_key:
