@@ -4,6 +4,10 @@ on:
     branches:
       - 'main'
   workflow_call:
+
+env:
+  SKIP_ANSIBLE_LINT: true
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -12,6 +16,13 @@ jobs:
 
       - name: Set up Docker
         uses: docker/setup-docker-action@v4
+
+      - name: Run ansible-lint
+        uses: ansible/ansible-lint@v25.8.1
+        with:
+          args: "-c .ansible-lint main.yml tasks/*"
+          setup_python: "true"
+          requirements_file: ./requirements.yml
 
       - name: Run tests
         run: |
