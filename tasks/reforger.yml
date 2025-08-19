@@ -98,3 +98,11 @@
       failed_when:
         - systemd_service_result is failed
         - not container_result.stat.exists
+
+    - name: Cron to wipe rank each week
+      ansible.builtin.cron:
+        name: wipe-rank
+        minute: 0
+        hour: 0 # Midnight
+        weekday: 1 # Monday
+        job: "rm -rf {{ linuxgsm_home }}/serverfiles/profiles/server/profile/PersistentRank/* &>/dev/null"
