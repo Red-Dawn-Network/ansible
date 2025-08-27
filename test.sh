@@ -33,12 +33,14 @@ do
     log_file="$(pwd)/.${host}-ansible.log"
     echo "" > "${log_file}"
     echo "Testing ${host} ansible playbooks in Docker..."
-    echo "To view output run the following command in another terminal: tail -f ${log_file}"
-    if docker run -it -v "$(pwd):/ansible" -v "${log_file}:/ansible.log" --privileged --hostname "${host}" --rm reddawntest &>/dev/null
+    echo "To view output run the following command in another terminal: docker logs -f ${host}"
+    run_command="docker run -it -v="$(pwd):/local" -v="${log_file}:/ansible.log" --privileged --hostname="${host}" --name="${host}" --rm reddawntest"
+    if ${run_command} &>/dev/null
     then
         echo "Ansible playbooks succeeded for ${host}!"
     else
         echo "Ansible playbook execution failed for ${host}!"
         echo "Check logs at $(pwd)/.${host}-ansible.log"
+        echo "Command that failed: ${run_command}"
     fi
 done

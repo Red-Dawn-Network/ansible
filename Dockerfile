@@ -23,4 +23,6 @@ COPY . /ansible
 
 ENV ARGS="--log-level=emerg"
 
-ENTRYPOINT [ "/docker-entrypoint.sh", "ansible-playbook", "--connection=local", "/ansible/main.yml" ]
+COPY entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT [ "/docker-entrypoint.sh", "/entrypoint.sh" ]
