@@ -38,11 +38,12 @@
     linuxgsm_user: scott
     linuxgsm_home: "/home/scott"
 
-# reddawnpvp server tasks
+# red-dawn-mgmt server tasks
 - ansible.builtin.include_tasks: "{{ item }}"
   with_items:
+    - "hosts/reddawnmilsim.yml"
     - "./reforger.yml"
-  when: ansible_hostname == "reddawnpvp"
+  when: ansible_hostname == "red-dawn-mgmt"
   vars:
     linuxgsm_user: scott
     linuxgsm_home: "/home/scott"

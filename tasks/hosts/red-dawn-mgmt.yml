@@ -1,0 +1,18 @@
+# Tasks specific to red-dawn-mgmt server
+---
+- name: Check if running in test container
+  ansible.builtin.stat:
+    path: /etc/skel/armarserver
+  register: container_result
+
+- name: Deploy quartermaster Docker container
+  community.docker.docker_container:
+    name: quartermaster
+    image: ghcr.io/red-dawn-network/quartermaster:ba8712ed59f24f2b9695fa722fe6faedc836941d
+    restart_policy: unless-stopped
+    env:
+      - INSTANCE_NAME: "Red Dawn Quartermaster"
+    env_file: /opt/quartermaster/env
+    ports:
+      - "127.0.0.1:8080:80/tcp"
+  when: not container_result.stat.exists  # i.e. assume snap isn't installed in container
