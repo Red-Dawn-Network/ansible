@@ -5,9 +5,9 @@
 # Create users, omit `github` parameter if user does not have a GitHub account
 - ansible.builtin.include_tasks: user.yml
   loop:
-    - { name: 'githubactions', admin: true, docker: true, github: 'heywoodlh' }
-    - { name: 'scott', admin: true, docker: true, github: 'ScottX01' }
-    - { name: 'heywoodlh', admin: true, docker: true, github: 'heywoodlh' }
+    - {name: 'githubactions', admin: "true", docker: "true", github: 'heywoodlh'}
+    - {name: 'scott', admin: "true", docker: "true", github: 'ScottX01'}
+    - {name: 'heywoodlh', admin: "true", docker: "true", github: 'heywoodlh'}
 
 # Setup cron jobs
 - ansible.builtin.include_tasks: cron.yml
