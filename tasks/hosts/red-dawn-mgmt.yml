@@ -15,4 +15,4 @@
     env_file: /opt/quartermaster/env
     ports:
       - "127.0.0.1:8080:80/tcp"
-  when: not container_result.stat.exists  # i.e. assume snap isn't installed in container
+  when: not container_result.stat.exists

@@ -41,8 +41,7 @@
 # red-dawn-mgmt server tasks
 - ansible.builtin.include_tasks: "{{ item }}"
   with_items:
-    - "hosts/reddawnmilsim.yml"
-    - "./reforger.yml"
+    - "hosts/red-dawn-mgmt.yml"
   when: ansible_hostname == "red-dawn-mgmt"
   vars:
     linuxgsm_user: scott
