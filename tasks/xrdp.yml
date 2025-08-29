@@ -5,6 +5,7 @@
       - xrdp
       - xfce4
       - xfce4-goodies
+      - dbus-x11
 
 - name: "Configure XRDP for {{ item }}"
   ansible.builtin.lineinfile:
