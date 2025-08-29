@@ -11,7 +11,7 @@
     image: ghcr.io/red-dawn-network/quartermaster:ba8712ed59f24f2b9695fa722fe6faedc836941d
     restart_policy: unless-stopped
     env:
-      - INSTANCE_NAME: "Red Dawn Quartermaster"
+      INSTANCE_NAME: "Red Dawn Quartermaster"
     env_file: /opt/quartermaster/env
     ports:
       - "127.0.0.1:8080:80/tcp"
