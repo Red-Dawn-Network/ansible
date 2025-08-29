@@ -36,7 +36,11 @@
         dest: /etc/apt/preferences.d/mozilla-firefox
         mode: "0755"
 
-    - name: Install dependencies
+    - name: Add mozilla ppa
+      ansible.builtin.apt_repository:
+        repo: ppa:mozillateam/ppa
+
+    - name: Install Firefox
       ansible.builtin.apt:
         name: firefox
 
