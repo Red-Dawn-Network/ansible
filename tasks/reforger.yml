@@ -104,8 +104,8 @@
         name: wipe-rank
         state: absent
         minute: 0
-        hour: 0 # Midnight
-        weekday: 1 # Monday
+        hour: 0  # Midnight
+        weekday: 1  # Monday
         job: "rm -rf {{ linuxgsm_home }}/serverfiles/profiles/server/profile/PersistentRank/* &>/dev/null"
 
     # https://serverfault.com/a/404412

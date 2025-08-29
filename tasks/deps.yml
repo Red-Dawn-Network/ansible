@@ -11,6 +11,35 @@
       - ufw
       - ansible-lint
 
+- name: Check if running in test container
+  ansible.builtin.stat:
+    path: /etc/skel/armarserver
+  register: container_result
+
+- name: Install firefox snap
+  when: ansible_distribution == "Ubuntu"
+  block:
+    - name: Disable firefox snap service
+      ansible.builtin.command: systemctl disable --now var-snap-firefox-common-host\\x2dhunspell.mount
+      register: unmount_firefox
+      failed_when: unmount_firefox.rc < 1
+
+    - name: Remove firefox snap
+      community.general.snap:
+        name: firefox
+        state: absent
+      when: not container_result.stat.exists  # i.e. assume snap isn't installed in container
+
+    - name: Disallow apt from installing firefox via snap
+      ansible.builtin.copy:
+        src: apt/mozilla-firefox
+        dest: /etc/apt/preferences.d/mozilla-firefox
+        mode: "0755"
+
+    - name: Install dependencies
+      ansible.builtin.apt:
+        name: firefox
+
 - name: Add Docker GPG apt Key
   ansible.builtin.apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg

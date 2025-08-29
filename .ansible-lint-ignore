@@ -1,0 +1,2 @@
+tasks/deps.yml command-instead-of-module
+tasks/deps.yml no-changed-when

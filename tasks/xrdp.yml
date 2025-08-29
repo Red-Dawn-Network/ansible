@@ -5,7 +5,6 @@
       - xrdp
       - xfce4
       - xfce4-goodies
-      - firefox
 
 - name: "Configure XRDP for {{ item }}"
   ansible.builtin.lineinfile:
