@@ -10,6 +10,7 @@
       - mosh
       - ufw
       - ansible-lint
+      - cockpit-bridge
 
 - name: Check if running in test container
   ansible.builtin.stat:
