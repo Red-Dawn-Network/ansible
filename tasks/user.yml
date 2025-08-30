@@ -34,3 +34,9 @@
     key: "{{ lookup('file', 'public_keys/githubactions') }}"
     user: githubactions
   when: item.name == "githubactions"
+
+- name: Add cockpit key to cockpit user
+  ansible.posix.authorized_key:
+    key: "{{ lookup('file', 'public_keys/cockpit') }}"
+    user: cockpit
+  when: item.name == "cockpit"

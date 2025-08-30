@@ -16,3 +16,7 @@
     ports:
       - "127.0.0.1:8080:80/tcp"
   when: not container_result.stat.exists
+
+- name: Install Cockpit
+  ansible.builtin.apt:
+    name: cockpit
