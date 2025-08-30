@@ -10,26 +10,11 @@
     force: false
     mode: "0644"
 
-- name: Add /etc/OliveTin/.stfolder
-  ansible.builtin.file:
-    path: /etc/OliveTin/.stfolder
-    state: absent
-
-- name: Remove OliveTin stignore
-  ansible.builtin.file:
-    path: /etc/OliveTin/.stignore
-    state: absent
-
 - name: Enable and start OliveTin
   ansible.builtin.systemd_service:
     name: OliveTin.service
     state: started
     enabled: true
-
-- name: Remove Syncthing
-  ansible.builtin.apt:
-    name: syncthing
-    state: absent
 
 - name: Create /opt/scripts/reforger directory
   ansible.builtin.file:
@@ -98,15 +83,6 @@
       failed_when:
         - systemd_service_result is failed
         - not container_result.stat.exists
-
-    - name: Cron to wipe rank each week
-      ansible.builtin.cron:
-        name: wipe-rank
-        state: absent
-        minute: 0
-        hour: 0  # Midnight
-        weekday: 1  # Monday
-        job: "rm -rf {{ linuxgsm_home }}/serverfiles/profiles/server/profile/PersistentRank/* &>/dev/null"
 
     # https://serverfault.com/a/404412
     - name: Cron to wipe rank biweekly

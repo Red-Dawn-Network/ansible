@@ -16,3 +16,13 @@
     rule: limit
     port: ssh
     proto: tcp
+
+- name: Check if running in test container
+  ansible.builtin.stat:
+    path: /etc/skel/armarserver
+  register: container_result
+
+- name: Enable ufw
+  community.general.ufw:
+    state: enabled
+  when: not container_result.stat.exists
