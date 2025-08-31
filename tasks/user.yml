@@ -14,6 +14,30 @@
     - item.admin is defined
     - item.admin == "true"
 
+- name: "Ensure .ssh folder exists for user: {{ item.name }}"
+  ansible.builtin.file:
+    path: "/home/{{ item.name }}/.ssh"
+    state: directory
+    mode: "0700"
+    owner: "{{ item.name }}"
+
+- name: Check if running in test container
+  ansible.builtin.stat:
+    path: /etc/skel/armarserver
+  register: container_result
+
+- name: "Copy cockpit SSH key to user"
+  ansible.builtin.copy:
+    src: /home/cockpit/.ssh/id_ed25519
+    dest: "/home/{{ item.name }}/.ssh/id_ed25519"
+    mode: "0600"
+    remote_src: true
+  when:
+    - not container_result.stat.exists
+    - item.admin is defined
+    - item.admin == "true"
+    - ansible_hostname == "red-dawn-mgmt"
+
 - name: "Add user to docker group: {{ item.name }}"
   ansible.builtin.user:
     name: "{{ item.name }}"

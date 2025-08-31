@@ -1,4 +1,9 @@
 ---
+- name: Check if running in test container
+  ansible.builtin.stat:
+    path: /etc/skel/armarserver
+  register: container_result
+
 # Install dependencies
 - ansible.builtin.include_tasks: deps.yml
 
@@ -21,6 +26,7 @@
   loop:
     - scott
     - heywoodlh
+  when: not container_result.stat.exists  # Skip if running in container to reduce runtime
 
 # Configure basic security posture
 - ansible.builtin.include_tasks: security.yml
