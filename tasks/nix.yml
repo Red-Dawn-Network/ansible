@@ -18,12 +18,18 @@
       register: nix_install
       changed_when: nix_install.rc == 0
 
-    - name: Cleanup Deteminate Nix installer
+    - name: Cleanup Determinate Nix installer
       ansible.builtin.file:
         path: /tmp/nix-installer.sh
         state: absent
 
+- name: Check if running in test container
+  ansible.builtin.stat:
+    path: /etc/skel/armarserver
+  register: container_result
+
 - name: Configure flakes for heywoodlh
+  when: not container_result.stat.exists  # Skip if running in container to reduce runtime
   block:
     - name: Loop over flakes
       ansible.builtin.shell: "/nix/var/nix/profiles/default/bin/nix profile add {{ item }} --override-input nixpkgs github:nixos/nixpkgs/nixpkgs-unstable || true"
