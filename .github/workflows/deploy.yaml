@@ -37,6 +37,6 @@ jobs:
         with:
           username: githubactions
           key: ${{ secrets.SSH_KEY }}
-          host: "reforger.heywoodlh.io,red-dawn-mgmt.heywoodlh.io" # Add more comma separated hosts
+          host: "reforger.heywoodlh.io,red-dawn-mgmt.heywoodlh.io,reforger-2.heywoodlh.io" # Add more comma separated hosts
           script: |
             sudo /opt/scripts/ansible-pull.sh

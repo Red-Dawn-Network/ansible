@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 targets="$@"
-[[ -z "${targets[*]}" ]] && targets=("red-dawn-mgmt" "reddawnmilsim")
+[[ -z "${targets[*]}" ]] && targets=("red-dawn-mgmt" "reddawnmilsim" "reddawnrust")
 
 # Mainly for GitHub Actions
 if [[ -z $SKIP_ANSIBLE_LINT ]]
@@ -45,7 +45,12 @@ do
     else
         status="failed"
         echo "Ansible playbook execution failed for ${host}!"
-        echo "Check logs at $(pwd)/.${host}-ansible.log"
+        if [[ ${PRINT_LOGS} == "true" ]]
+        then
+            cat "${log_file}"
+        else
+            echo "Check logs at ${log_file}."
+        fi
         echo "Command that failed: ${run_command}"
     fi
 done
