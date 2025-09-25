@@ -40,7 +40,7 @@ server_port="17777"
 linuxgsm_home="/home/scott"
 ```
 
-### reddawnpvp
+### reddawnrust
 
 Arma Reforger Server was installed as user `scott` following these instructions: [Deploy Arma Reforger Game Servers: Install](https://linuxgsm.com/servers/armarserver)
 

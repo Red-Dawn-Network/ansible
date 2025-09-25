@@ -45,6 +45,17 @@
     linuxgsm_user: scott
     linuxgsm_home: "/home/scott"
 
+# Host-specific tasks
+# reddawnmilsim server tasks
+- ansible.builtin.include_tasks: "{{ item }}"
+  with_items:
+    - "hosts/reddawnrust.yml"
+    - "./reforger.yml"
+  when: ansible_hostname == "reddawnrust"
+  vars:
+    linuxgsm_user: scott
+    linuxgsm_home: "/home/scott"
+
 # red-dawn-mgmt server tasks
 - ansible.builtin.include_tasks: "{{ item }}"
   with_items:
